@@ -1,5 +1,5 @@
 export default {
-  heading: 'Home heading',
+  heading: 'Home heading - {{test}}',
   array: ['home 1', 'home 2', 'home 3'],
   homeNested: {
     blocks: {

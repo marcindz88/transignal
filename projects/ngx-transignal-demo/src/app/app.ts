@@ -1,12 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { transignal } from './transignal';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  protected title = 'ngx-transignal-demo';
+  protected transignalService = transignal.service();
+
+  protected t = transignal.t('home');
+
+  switchLanguage() {
+    const activeLang = this.transignalService.activeLang();
+    this.transignalService.setActiveLang(activeLang === 'fr' ? 'en' : 'fr');
+  }
 }
