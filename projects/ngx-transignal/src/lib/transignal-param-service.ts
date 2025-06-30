@@ -15,7 +15,7 @@ export class TransignalParamService {
 
   protected replaceParam<T>(translation: T, key: string, value: string): T {
     if (typeof translation === 'string') {
-      return translation.replaceAll(`{{${key}}`, value) as T;
+      return translation.replaceAll(`{{${key}}}`, value) as T;
     }
     if (Array.isArray(value)) {
       return value.map((val) => this.replaceParam(val as T, key, value)) as T;
