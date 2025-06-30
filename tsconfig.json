@@ -7,6 +7,11 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "paths": {
+      "ngx-transignal": [
+        "./dist/ngx-transignal"
+      ]
+    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -22,5 +27,19 @@
     "typeCheckHostBindings": true,
     "strictTemplates": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ngx-transignal/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-transignal/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ngx-transignal-demo/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ngx-transignal-demo/tsconfig.spec.json"
+    }
+  ]
 }

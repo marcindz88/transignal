@@ -3,5 +3,123 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
+    "ngx-transignal": {
+      "projectType": "library",
+      "root": "projects/ngx-transignal",
+      "sourceRoot": "projects/ngx-transignal/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-transignal/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-transignal/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/ngx-transignal/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "ngx-transignal-demo": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ngx-transignal-demo",
+      "sourceRoot": "projects/ngx-transignal-demo/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/ngx-transignal-demo/src/main.ts",
+            "tsConfig": "projects/ngx-transignal-demo/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/ngx-transignal-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/ngx-transignal-demo/src/styles.scss"
+            ],
+            "server": "projects/ngx-transignal-demo/src/main.server.ts",
+            "outputMode": "server",
+            "ssr": {
+              "entry": "projects/ngx-transignal-demo/src/server.ts"
+            }
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "ngx-transignal-demo:build:production"
+            },
+            "development": {
+              "buildTarget": "ngx-transignal-demo:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "tsConfig": "projects/ngx-transignal-demo/tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/ngx-transignal-demo/public"
+              }
+            ],
+            "styles": [
+              "projects/ngx-transignal-demo/src/styles.scss"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "3e673793-1b7b-4319-82fa-f54f93d93288"
   }
 }
