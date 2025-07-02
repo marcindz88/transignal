@@ -5,7 +5,7 @@ export default {
   array: ['home 1', 'home 2', 'home 3'],
   homeNested: {
     blocks: {
-      something: 'Example smething',
+      something: 'Example something',
       array: ['nested home 1', 'nested home 2', 'nested home 3'],
     },
   },

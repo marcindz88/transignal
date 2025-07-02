@@ -31,7 +31,7 @@ export class TransignalService<
   private readonly paramsHandler = this.config.paramHandler ?? simpleParamsHandler;
   private readonly loadingFn = this.config.loadingFn ?? (() => '...');
 
-  private readonly errorHandler = this.config.errorHandler ?? console.error;
+  private readonly errorHandler = this.config.errorHandler ?? console.error; // TODO maybe add a link to error page in docs
   readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
 
   private readonly scopeMap = new Map<string, TranslateObj<Translations[Scopes]>>();
@@ -89,9 +89,17 @@ export class TransignalService<
       prefixedT.arr = prefixedT;
       prefixedT.obj = prefixedT;
       prefixedT.plural = this.preparePluralFn(prefixedT);
-      if (this.config.maxPrefixDepth || 3 >= depth) {
-        prefixedT.prefix = this.preparePrefixFn(prefixedT, depth + 1);
-      }
+      prefixedT.prefix =
+        this.config.maxPrefixDepth || 3 >= depth
+          ? this.preparePrefixFn(prefixedT, depth + 1)
+          : () => {
+              this.errorHandler('prefix_too_deep');
+              const t = () => '';
+              t.arr = () => [];
+              t.obj = () => ({});
+              t.plural = () => '';
+              return t;
+            };
       return prefixedT as any;
     };
   }

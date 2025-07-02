@@ -18,7 +18,7 @@ export type Paths<T> = (
           [K in keyof T]-?: K extends string | number
             ? `${K}` | `${K}${DotPrefix<Paths<T[K]>>}`
             : never;
-        }[keyof T & (string | number)]
+        }[keyof T]
     : ''
 ) extends infer P
   ? P extends string
@@ -41,10 +41,5 @@ export type PluralPaths<T> = {
 export type StringPaths<T> = {
   [P in Paths<T>]: GetNestedType<T, P> extends string ? P : never;
 }[Paths<T>];
-
-export type FilterPathsByPrefix<
-  Paths extends string,
-  Prefix extends string,
-> = Paths extends `${Prefix}.${infer TRest}` ? TRest : never;
 
 export type StringKeys<T> = Extract<keyof T, string>;

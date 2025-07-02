@@ -8,4 +8,12 @@
 <p>{{ t.plural('plural.users', 1) }}</p>
 <p>{{ t.plural('plural.users', 5) }}</p>
 
+<h2>Prefix example</h2>
+@let tPrefixed = t.prefix('homeNested.blocks');
+<p>{{ tPrefixed('something') }}</p>
+@for (entry of tPrefixed.arr('array'); track entry) {
+  <p>{{ entry }}</p>
+}
+
 <button (click)="switchLanguage()">Switch language</button>
+

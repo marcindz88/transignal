@@ -1,6 +1,5 @@
 import {
   ArrayPaths,
-  FilterPathsByPrefix,
   GetNestedType,
   ObjectPaths,
   PluralPaths,
@@ -9,7 +8,15 @@ import {
 } from './utility-types';
 import { ParamHandler } from './transignal-param-handlers';
 
-export type TransignalError = 'missing_key' | 'missing_file' | 'missing_plural';
+export type TransignalError =
+  /** Error when key is not found in translations */
+  | 'missing_key'
+  /** Error when translation file for scope and lang has not been found */
+  | 'missing_file'
+  /** Error plural for a value is not defined for a language */
+  | 'missing_plural'
+  /** Error when prefix chain is called more then {@link TransignalConfig.maxPrefixDepth} */
+  | 'prefix_too_deep';
 
 export type TranslateParams = Record<string, unknown>;
 
@@ -37,9 +44,7 @@ export type TranslateObj<Context extends Record<string, any>> = TranslateFn<
     value: number,
     params?: TranslateParams
   ) => string;
-  prefix: <T extends ObjectPaths<Context>>(
-    prefix: T
-  ) => TranslateObj<Context[T]> & TranslateFn<FilterPathsByPrefix<StringPaths<Context>, T>, string>;
+  prefix: <T extends ObjectPaths<Context>>(prefix: T) => TranslateObj<GetNestedType<Context, T>>;
 };
 
 export type TranslationFile = Record<string, unknown>;
@@ -104,7 +109,8 @@ export type TransignalConfig<
   errorHandler?: (errorCode: TransignalError, ...args: unknown[]) => void;
   /**
    * Defines max depth of prefix functions in {@link TranslateObj}
-   * Defaults to 3
+   * Defaults to 3, this means that if prefix function is used more than 3 time on the same t then it will fail
+   * Required for performance reasons
    */
   maxPrefixDepth?: number;
 };
