@@ -9,10 +9,11 @@ import { transignal } from './transignal';
 export class App {
   protected transignalService = transignal.service();
   protected t = transignal.t('home');
+  protected isLoading = this.transignalService.isLoading;
 
   switchLanguage() {
     const activeLang = this.transignalService.activeLang();
-    this.transignalService.setActiveLang(activeLang === 'fr' ? 'en' : 'fr');
+    this.transignalService.activeLang.set(activeLang === 'fr' ? 'en' : 'fr');
   }
 
   example() {

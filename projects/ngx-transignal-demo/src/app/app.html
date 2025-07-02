@@ -1,4 +1,5 @@
 <h1>{{ t('heading', { test: 'param' }) }}</h1>
+<p>Loading {{ isLoading() ? 'yes' : 'no' }}</p>
 
 @for (entry of t.arr('array'); track entry) {
   <p>{{ entry }}</p>

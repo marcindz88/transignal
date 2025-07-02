@@ -1,4 +1,5 @@
 import {
+  computed,
   EnvironmentInjector,
   inject,
   Injectable,
@@ -31,16 +32,19 @@ export class TransignalService<
   private readonly config = injectTransignalConfig<Languages, Translations>();
   private readonly paramsHandler = this.config.paramHandler ?? simpleParamsHandler;
   private readonly loadingFn = this.config.loadingFn ?? (() => '...');
-
   private readonly errorHandler = this.config.errorHandler ?? console.error; // TODO maybe add a link to error page in docs
-  readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
-
+  private readonly loadingCount = signal<number>(0);
   private readonly scopeMap = new Map<string, TranslateObj<Translations[Scopes]>>();
   private readonly languageMap = new Map<string, ResourceRef<TranslationFile | undefined>>();
 
-  setActiveLang(lang: Languages): void {
-    this.activeLang.set(lang);
-  }
+  /**
+   * Use to set or get active language
+   */
+  readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
+  /**
+   * Use to determine whether service is currently loading translation files
+   */
+  readonly isLoading = computed(() => this.loadingCount() > 0);
 
   t<Scope extends Scopes>(scope: Scope): TranslateObj<Translations[Scope]> {
     const existing = this.scopeMap.get(scope);
@@ -186,7 +190,16 @@ export class TransignalService<
     if (existing) return existing;
 
     const translation = runInInjectionContext(this.injector, () =>
-      untracked(() => resource({ loader: () => this.config.loader(scope, lang) }))
+      untracked(() =>
+        resource({
+          loader: async () => {
+            this.loadingCount.update(count => ++count);
+            const file = await this.config.loader(scope, lang);
+            this.loadingCount.update(count => --count);
+            return file;
+          },
+        })
+      )
     );
     this.languageMap.set(cacheKey, translation);
     return translation;
