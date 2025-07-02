@@ -8,6 +8,8 @@ import {
   StringPaths,
 } from './utility-types';
 import { ParamHandler } from './transignal-param-handlers';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { inject } from '@angular/core';
 
 export type TransignalError =
   /** Error when key is not found in translations */
@@ -126,6 +128,7 @@ export type TransignalConfig<
   /**
    * A function responsible for dynamically loading translation files.
    * This function is called when a specific translation scope and language is requested
+   * It runs in TransignalService injection context so {@link inject()} can be used to e.g. use HttpClient
    *
    * @param scope The string key representing the translation scope (e.g., 'common', 'auth').
    * @param lang The language identifier for which to load translations (e.g., 'en', 'fr').

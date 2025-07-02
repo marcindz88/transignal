@@ -194,7 +194,9 @@ export class TransignalService<
         resource({
           loader: async () => {
             this.loadingCount.update(count => ++count);
-            const file = await this.config.loader(scope, lang);
+            const file = await runInInjectionContext(this.injector, () =>
+              this.config.loader(scope, lang)
+            );
             this.loadingCount.update(count => --count);
             return file;
           },
