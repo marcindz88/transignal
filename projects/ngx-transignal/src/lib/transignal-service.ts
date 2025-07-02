@@ -10,8 +10,14 @@ import {
 } from '@angular/core';
 
 import { injectTransignalConfig } from './transignal-config';
-import { TransignalParamService } from './transignal-param-service';
-import { TranslateObj, TranslateParams, TranslationFile } from './types';
+import { simpleParamsHandler } from './transignal-param-handlers';
+import {
+  PluralTranslation,
+  TranslateFn,
+  TranslateObj,
+  TranslateParams,
+  TranslationFile,
+} from './types';
 import { StringKeys, StringPaths } from './utility-types';
 
 @Injectable()
@@ -22,24 +28,24 @@ export class TransignalService<
 > {
   private readonly injector = inject(EnvironmentInjector);
   private readonly config = injectTransignalConfig<Languages, Translations>();
-  private readonly paramsService =
-    this.config.paramsService ?? new TransignalParamService();
+  private readonly paramsHandler =
+    this.config.paramHandler ?? simpleParamsHandler;
+  private readonly loadingFn = this.config.loadingFn ?? (() => '...');
 
   private readonly errorHandler = this.config.errorHandler ?? console.error;
+  readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
 
-  activeLang = signal<Languages>(this.config.defaultLang);
-
-  private scopeMap = new Map<string, TranslateObj<Translations[Scopes]>>();
-  private languageMap = new Map<
+  private readonly scopeMap = new Map<
+    string,
+    TranslateObj<Translations[Scopes]>
+  >();
+  private readonly languageMap = new Map<
     string,
     ResourceRef<TranslationFile | undefined>
   >();
 
   setActiveLang(lang: Languages): void {
-    this.activeLang.set(
-      this.config.availableLangs.find((l) => l === lang) ||
-        this.config.defaultLang,
-    );
+    this.activeLang.set(lang);
   }
 
   t<Scope extends Scopes>(scope: Scope): TranslateObj<Translations[Scope]> {
@@ -67,14 +73,14 @@ export class TransignalService<
       }
       const { isLoading, error, value } = this.fetchLanguage(scope, lang);
       if (isLoading()) {
-        return this.config.loadingFn?.(key) ?? '...';
+        return this.loadingFn?.(key);
       }
       if (error() || !value()) {
         this.errorHandler('missing_file', error());
         return '';
       }
 
-      const result = this.paramsService.prepareTranslation(
+      const result = this.replaceParams(
         this.resolveObjectPath(value(), key),
         params,
       );
@@ -83,7 +89,7 @@ export class TransignalService<
     }) as TranslateObj<Context>; // needed as other props are assigned below
 
     t.prefix = (prefix: string) => {
-      const prefixedT = (key: string, params: TranslateParams) =>
+      const prefixedT = (key: string, params?: TranslateParams) =>
         t(`${prefix}${key}` as StringPaths<Context>, params);
       prefixedT.arr = prefixedT;
       prefixedT.obj = prefixedT;

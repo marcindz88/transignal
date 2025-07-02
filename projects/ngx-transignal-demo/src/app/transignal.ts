@@ -1,8 +1,8 @@
 import {
   prepareTransignal,
   treeShakedTranslations,
-} from '../../../ngx-transignal/src/lib/transignal-config';
-import { TranslationFile } from '../../../ngx-transignal/src/lib/types';
+  TranslationFile,
+} from 'ngx-transignal';
 import type translations from './i18n/translations';
 
 export const transignal = prepareTransignal({

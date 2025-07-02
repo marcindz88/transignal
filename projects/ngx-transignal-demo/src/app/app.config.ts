@@ -18,6 +18,6 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    transignal.providers,
+    transignal.provide(),
   ],
 };

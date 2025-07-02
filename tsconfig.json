@@ -9,7 +9,7 @@
     "noImplicitReturns": true,
     "paths": {
       "ngx-transignal": [
-        "./dist/ngx-transignal"
+        "./projects/ngx-transignal/src/public-api.ts"
       ]
     },
     "noFallthroughCasesInSwitch": true,
@@ -18,7 +18,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
