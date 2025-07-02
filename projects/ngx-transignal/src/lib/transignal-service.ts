@@ -11,14 +11,8 @@ import {
 
 import { injectTransignalConfig } from './transignal-config';
 import { simpleParamsHandler } from './transignal-param-handlers';
-import {
-  PluralTranslation,
-  TranslateFn,
-  TranslateObj,
-  TranslateParams,
-  TranslationFile,
-} from './types';
-import { StringKeys, StringPaths } from './utility-types';
+import { PluralTranslation, TranslateFn, TranslateObj, TranslateParams, TranslationFile } from './types';
+import { StringKeys } from './utility-types';
 
 @Injectable()
 export class TransignalService<
@@ -28,21 +22,14 @@ export class TransignalService<
 > {
   private readonly injector = inject(EnvironmentInjector);
   private readonly config = injectTransignalConfig<Languages, Translations>();
-  private readonly paramsHandler =
-    this.config.paramHandler ?? simpleParamsHandler;
+  private readonly paramsHandler = this.config.paramHandler ?? simpleParamsHandler;
   private readonly loadingFn = this.config.loadingFn ?? (() => '...');
 
   private readonly errorHandler = this.config.errorHandler ?? console.error;
   readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
 
-  private readonly scopeMap = new Map<
-    string,
-    TranslateObj<Translations[Scopes]>
-  >();
-  private readonly languageMap = new Map<
-    string,
-    ResourceRef<TranslationFile | undefined>
-  >();
+  private readonly scopeMap = new Map<string, TranslateObj<Translations[Scopes]>>();
+  private readonly languageMap = new Map<string, ResourceRef<TranslationFile | undefined>>();
 
   setActiveLang(lang: Languages): void {
     this.activeLang.set(lang);
@@ -59,9 +46,7 @@ export class TransignalService<
     return scopeObj;
   }
 
-  private initT<Context extends Record<string, any>>(
-    scope: Scopes,
-  ): TranslateObj<Context> {
+  private initT<Context extends Record<string, any>>(scope: Scopes): TranslateObj<Context> {
     const cache = new Map<string, unknown>();
     const t: TranslateObj<Context> = ((key, params) => {
       const lang = this.activeLang();
@@ -80,26 +65,29 @@ export class TransignalService<
         return '';
       }
 
-      const result = this.replaceParams(
-        this.resolveObjectPath(value(), key),
-        params,
-      );
+      const result = this.replaceParams(this.resolveObjectPath(value(), key), params);
       cache.set(memoKey, result);
       return result;
     }) as TranslateObj<Context>; // needed as other props are assigned below
 
-    t.prefix = (prefix: string) => {
-      const prefixedT = (key: string, params?: TranslateParams) =>
-        t(`${prefix}${key}` as StringPaths<Context>, params);
+    t.arr = t as any;
+    t.obj = t as any;
+    t.prefix = this.preparePrefixFn(t, 1);
+    t.plural = this.preparePluralFn(t);
+    return t;
+  }
+
+  private preparePrefixFn(t: TranslateFn<any, any>, depth: number) {
+    return (prefix: string) => {
+      const prefixedT = (key: string, params?: TranslateParams) => t(`${prefix}.${key}`, params);
       prefixedT.arr = prefixedT;
       prefixedT.obj = prefixedT;
       prefixedT.plural = this.preparePluralFn(prefixedT);
+      if (this.config.maxPrefixDepth || 3 >= depth) {
+        prefixedT.prefix = this.preparePrefixFn(prefixedT, depth + 1);
+      }
       return prefixedT as any;
     };
-    t.arr = t as any;
-    t.obj = t as any;
-    t.plural = this.preparePluralFn(t);
-    return t;
   }
 
   private preparePluralFn(t: TranslateFn<any, any>) {
@@ -135,9 +123,7 @@ export class TransignalService<
       return this.paramsHandler(translation, params) as T;
     }
     if (Array.isArray(translation)) {
-      return translation.map((val) =>
-        this.replaceParams(val as T, params),
-      ) as T;
+      return translation.map(val => this.replaceParams(val as T, params)) as T;
     }
     if (typeof translation === 'object') {
       return Object.entries(translation).reduce(
@@ -145,33 +131,25 @@ export class TransignalService<
           prev[objKey] = this.replaceParams(objVal, params);
           return prev;
         },
-        {} as Record<string, unknown>,
+        {} as Record<string, unknown>
       ) as T;
     }
     return translation;
   }
 
-  private fetchLanguage(
-    scope: Scopes,
-    lang: Languages,
-  ): ResourceRef<TranslationFile | undefined> {
+  private fetchLanguage(scope: Scopes, lang: Languages): ResourceRef<TranslationFile | undefined> {
     const cacheKey = `${scope}/${lang}`;
     const existing = this.languageMap.get(cacheKey);
     if (existing) return existing;
 
     const translation = runInInjectionContext(this.injector, () =>
-      untracked(() =>
-        resource({ loader: () => this.config.loader(scope, lang) }),
-      ),
+      untracked(() => resource({ loader: () => this.config.loader(scope, lang) }))
     );
     this.languageMap.set(cacheKey, translation);
     return translation;
   }
 
-  private resolveObjectPath(
-    obj: Record<string, any> | undefined,
-    path: string,
-  ): unknown {
+  private resolveObjectPath(obj: Record<string, any> | undefined, path: string): unknown {
     const keys = path.split('.');
     let current: unknown = obj;
     for (const key of keys) {

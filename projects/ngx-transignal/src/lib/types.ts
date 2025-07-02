@@ -41,7 +41,7 @@ export type TranslateObj<Context extends Record<string, any>> = TranslateFn<
   ) => string;
   prefix: <T extends ObjectPaths<Context>>(
     prefix: T,
-  ) => Omit<TranslateObj<Context[T]>, 'prefix'> &
+  ) => TranslateObj<Context[T]> &
     TranslateFn<FilterPathsByPrefix<StringPaths<Context>, T>, string>;
 };
 
@@ -108,4 +108,9 @@ export type TransignalConfig<
    * @param args Any additional arguments relevant to the error.
    */
   errorHandler?: (errorCode: TransignalError, ...args: unknown[]) => void;
+  /**
+   * Defines max depth of prefix functions in {@link TranslateObj}
+   * Defaults to 3
+   */
+  maxPrefixDepth?: number;
 };
