@@ -8,11 +8,17 @@ import { transignal } from './transignal';
 })
 export class App {
   protected transignalService = transignal.service();
-
   protected t = transignal.t('home');
 
   switchLanguage() {
     const activeLang = this.transignalService.activeLang();
     this.transignalService.setActiveLang(activeLang === 'fr' ? 'en' : 'fr');
+  }
+
+  example() {
+    this.t.plural('plural.users', 2);
+    this.t.obj('homeNested.blocks');
+    this.t.arr('array');
+    this.t('homeNested.blocks.something');
   }
 }

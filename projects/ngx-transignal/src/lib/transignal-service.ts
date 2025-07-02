@@ -93,12 +93,62 @@ export class TransignalService<
         t(`${prefix}${key}` as StringPaths<Context>, params);
       prefixedT.arr = prefixedT;
       prefixedT.obj = prefixedT;
+      prefixedT.plural = this.preparePluralFn(prefixedT);
       return prefixedT as any;
     };
     t.arr = t as any;
     t.obj = t as any;
-
+    t.plural = this.preparePluralFn(t);
     return t;
+  }
+
+  private preparePluralFn(t: TranslateFn<any, any>) {
+    return (key: string, count: number, params?: TranslateParams) => {
+      const plurals = t(key, { count, ...params }) as PluralTranslation;
+      if (plurals === this.loadingFn(key)) {
+        return plurals as string;
+      }
+      if (plurals[count]) {
+        return plurals[count];
+      }
+      const valueLastDigit = +count.toFixed(0).at(-1)!;
+      if (plurals.one && valueLastDigit === 1) {
+        return plurals.one;
+      }
+      if (plurals.many && valueLastDigit >= 5) {
+        return plurals.many;
+      }
+      if (plurals.few && valueLastDigit > 1 && valueLastDigit < 5) {
+        return plurals.few;
+      }
+      if (plurals.other) {
+        return plurals.other;
+      }
+      this.errorHandler('missing_plural', key, plurals, count);
+      return '';
+    };
+  }
+
+  protected replaceParams<T>(translation: T, params?: TranslateParams): T {
+    if (!translation) return translation;
+    if (typeof translation === 'string') {
+      return this.paramsHandler(translation, params) as T;
+    }
+    if (Array.isArray(translation)) {
+      return translation.map((val) =>
+        this.replaceParams(val as T, params),
+      ) as T;
+    }
+    if (typeof translation === 'object') {
+      return Object.entries(translation).reduce(
+        (prev, [objKey, objVal]) => {
+          prev[objKey] = this.replaceParams(objVal, params);
+          return prev;
+        },
+        {} as Record<string, unknown>,
+      ) as T;
+    }
+    return translation;
   }
 
   private fetchLanguage(

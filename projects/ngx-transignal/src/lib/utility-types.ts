@@ -1,3 +1,5 @@
+import { PluralTranslation } from './types';
+
 export type GetNestedType<
   T,
   P extends string,
@@ -35,6 +37,10 @@ export type ObjectPaths<T> = {
   [P in Paths<T>]: GetNestedType<T, P> extends Record<string, unknown>
     ? P
     : never;
+}[Paths<T>];
+
+export type PluralPaths<T> = {
+  [P in Paths<T>]: PluralTranslation extends GetNestedType<T, P> ? P : never;
 }[Paths<T>];
 
 export type StringPaths<T> = {

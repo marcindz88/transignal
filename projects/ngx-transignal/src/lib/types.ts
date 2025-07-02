@@ -13,6 +13,10 @@ export type TransignalError = 'missing_key' | 'missing_file' | 'missing_plural';
 
 export type TranslateParams = Record<string, unknown>;
 
+export type PluralTranslation = Partial<
+  Record<number | 'one' | 'few' | 'many' | 'other', string>
+>;
+
 export type TranslateFn<Keys extends string, Result> = (
   key: Keys,
   params?: TranslateParams,

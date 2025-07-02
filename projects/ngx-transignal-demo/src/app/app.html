@@ -1,9 +1,11 @@
-<h1>
-  {{ t('heading', { test: 'param' }) }}
-</h1>
+<h1>{{ t('heading', { test: 'param' }) }}</h1>
 
-@for (arr of t.arr('array'); track arr) {
-  <p>{{arr}}</p>
+@for (entry of t.arr('array'); track entry) {
+  <p>{{ entry }}</p>
 }
+
+<h2>Plurals example</h2>
+<p>{{ t.plural('plural.users', 1) }}</p>
+<p>{{ t.plural('plural.users', 5) }}</p>
 
 <button (click)="switchLanguage()">Switch language</button>
