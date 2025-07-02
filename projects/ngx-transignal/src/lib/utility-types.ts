@@ -1,4 +1,4 @@
-import { PluralTranslation } from './types';
+import { PluralTranslation, SelectTranslation } from './types';
 
 export type GetNestedType<T, P extends string> = P extends `${infer Key}.${infer Rest}`
   ? Key extends keyof T
@@ -35,7 +35,11 @@ export type ObjectPaths<T> = {
 }[Paths<T>];
 
 export type PluralPaths<T> = {
-  [P in Paths<T>]: PluralTranslation extends GetNestedType<T, P> ? P : never;
+  [P in Paths<T>]: GetNestedType<T, P> extends PluralTranslation ? P : never;
+}[Paths<T>];
+
+export type SelectPaths<T> = {
+  [P in Paths<T>]: GetNestedType<T, P> extends SelectTranslation ? P : never;
 }[Paths<T>];
 
 export type StringPaths<T> = {

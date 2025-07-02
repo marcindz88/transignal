@@ -3,6 +3,7 @@ import {
   GetNestedType,
   ObjectPaths,
   PluralPaths,
+  SelectPaths,
   StringKeys,
   StringPaths,
 } from './utility-types';
@@ -15,12 +16,30 @@ export type TransignalError =
   | 'missing_file'
   /** Error plural for a value is not defined for a language */
   | 'missing_plural'
+  /** Error when plural used on a non-plural translation */
+  | 'invalid_plural'
+  /** Error select for a value is not defined for a language */
+  | 'missing_select'
+  /** Error when select used on a non-select translation */
+  | 'invalid_select'
   /** Error when prefix chain is called more then {@link TransignalConfig.maxPrefixDepth} */
   | 'prefix_too_deep';
 
 export type TranslateParams = Record<string, unknown>;
 
-export type PluralTranslation = Partial<Record<number | 'one' | 'few' | 'many' | 'other', string>>;
+export type Marked<K, T> = K & { __marker: T };
+
+export type BasePluralTranslation = Partial<
+  Record<number | 'one' | 'few' | 'many' | 'other', string>
+>;
+
+export type PluralTranslation = Marked<BasePluralTranslation, 'plural'>;
+
+export type BaseSelectTranslation = Partial<Record<string | number | 'null', string>>;
+
+export type MarkedAsSelect<T extends BaseSelectTranslation> = Marked<T, 'select'>;
+
+export type SelectTranslation = MarkedAsSelect<BaseSelectTranslation>;
 
 export type TranslateFn<Keys extends string, Result> = (
   key: Keys,
@@ -31,19 +50,50 @@ export type TranslateObj<Context extends Record<string, any>> = TranslateFn<
   StringPaths<Context>,
   string
 > & {
+  /**
+   * Returns translating function that returns an array of translations
+   * @param key path of translation
+   * @param params parameters of translation in syntax defined by {@link TransignalConfig.paramHandler}
+   */
   arr: <ArrKey extends ArrayPaths<Context>>(
     key: ArrKey,
     params?: TranslateParams
   ) => GetNestedType<Context, ArrKey>;
+  /**
+   * Returns translating function that returns an object of translations
+   * @param key path of translation
+   * @param params parameters of translation in syntax defined by {@link TransignalConfig.paramHandler}
+   */
   obj: <ObjKey extends ObjectPaths<Context>>(
     key: ObjKey,
     params?: TranslateParams
   ) => GetNestedType<Context, ObjKey>;
+  /**
+   * Returns translating function that returns a string translation depending on a correct plural form
+   * @param key path of translation
+   * @param count count to determine correct plural form
+   * @param params parameters of translation in syntax defined by {@link TransignalConfig.paramHandler}
+   */
   plural: <ObjKey extends PluralPaths<Context>>(
     key: ObjKey,
-    value: number,
+    count: number,
     params?: TranslateParams
   ) => string;
+  /**
+   * Returns translating function that returns a string translation depending on a selected value
+   * @param key path of translation
+   * @param value value to determine selected translation
+   * @param params parameters of translation in syntax defined by {@link TransignalConfig.paramHandler}
+   */
+  select: <ObjKey extends SelectPaths<Context>>(
+    key: ObjKey,
+    value: keyof SelectTranslation | null,
+    params?: TranslateParams
+  ) => string;
+  /**
+   * Returns translating function that is encapsulated in a selected prefix
+   * @param prefix path of new root translation
+   */
   prefix: <T extends ObjectPaths<Context>>(prefix: T) => TranslateObj<GetNestedType<Context, T>>;
 };
 

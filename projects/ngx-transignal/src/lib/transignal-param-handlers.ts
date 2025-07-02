@@ -22,5 +22,8 @@ export const simpleParamValueStringify = (paramValue: unknown) => {
   if (typeof paramValue === 'string') {
     return paramValue;
   }
+  if (paramValue == null) {
+    return '';
+  }
   return (paramValue as any).toString();
 };

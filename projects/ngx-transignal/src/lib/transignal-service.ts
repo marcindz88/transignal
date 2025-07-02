@@ -13,6 +13,7 @@ import { injectTransignalConfig } from './transignal-config';
 import { simpleParamsHandler } from './transignal-param-handlers';
 import {
   PluralTranslation,
+  SelectTranslation,
   TranslateFn,
   TranslateObj,
   TranslateParams,
@@ -80,6 +81,7 @@ export class TransignalService<
     t.obj = t as any;
     t.prefix = this.preparePrefixFn(t, 1);
     t.plural = this.preparePluralFn(t);
+    t.select = this.prepareSelectFn(t);
     return t;
   }
 
@@ -89,6 +91,7 @@ export class TransignalService<
       prefixedT.arr = prefixedT;
       prefixedT.obj = prefixedT;
       prefixedT.plural = this.preparePluralFn(prefixedT);
+      prefixedT.select = this.prepareSelectFn(prefixedT);
       prefixedT.prefix =
         this.config.maxPrefixDepth || 3 >= depth
           ? this.preparePrefixFn(prefixedT, depth + 1)
@@ -106,8 +109,12 @@ export class TransignalService<
 
   private preparePluralFn(t: TranslateFn<any, any>) {
     return (key: string, count: number, params?: TranslateParams) => {
-      const plurals = t(key, { count, ...params }) as PluralTranslation;
-      if (plurals === this.loadingFn(key)) {
+      const plurals = t(key, { count, ...params }) as PluralTranslation | string;
+      if (typeof plurals === 'string') {
+        if (plurals === this.loadingFn(key)) {
+          return plurals;
+        }
+        this.errorHandler('invalid_plural', key, plurals);
         return plurals as string;
       }
       if (plurals[count]) {
@@ -127,6 +134,28 @@ export class TransignalService<
         return plurals.other;
       }
       this.errorHandler('missing_plural', key, plurals, count);
+      return '';
+    };
+  }
+
+  private prepareSelectFn(t: TranslateFn<any, any>) {
+    return (key: string, value: string | number | null, params?: TranslateParams) => {
+      const selects = t(key, { value, ...params }) as SelectTranslation | string;
+      if (typeof selects === 'string') {
+        if (selects === this.loadingFn(key)) {
+          return selects;
+        }
+        this.errorHandler('invalid_select', key, selects);
+        return selects as string;
+      }
+      if (value !== null) {
+        if (selects[value]) {
+          return selects[value];
+        }
+      } else if (selects['null']) {
+        return selects['null'];
+      }
+      this.errorHandler('missing_select', key, selects, value);
       return '';
     };
   }

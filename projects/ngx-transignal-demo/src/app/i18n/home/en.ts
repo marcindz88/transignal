@@ -1,4 +1,4 @@
-import { plural } from 'ngx-transignal';
+import { plural, select } from 'ngx-transignal';
 
 export default {
   heading: 'Home heading - {test}',
@@ -14,6 +14,13 @@ export default {
       1: '1 user',
       few: 'only {count} users',
       many: '{count} users',
+    }),
+  },
+  select: {
+    categories: select({
+      all: 'All categories',
+      test: 'Test category',
+      null: 'None',
     }),
   },
 };

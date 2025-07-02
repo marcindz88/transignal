@@ -1,5 +1,5 @@
 import type en from './en';
-import { plural } from 'ngx-transignal';
+import { plural, select } from 'ngx-transignal';
 
 export default {
   heading: 'FR Home heading',
@@ -15,6 +15,13 @@ export default {
       1: '1 french user',
       few: 'only {count} french users',
       other: '{count} french users',
+    }),
+  },
+  select: {
+    categories: select({
+      all: 'All french categories',
+      test: 'Test french category',
+      null: 'FR None',
     }),
   },
 } satisfies typeof en;

@@ -8,6 +8,11 @@
 <p>{{ t.plural('plural.users', 1) }}</p>
 <p>{{ t.plural('plural.users', 5) }}</p>
 
+<h2>Select example</h2>
+<p>{{ t.select('select.categories', 'all') }}</p>
+<p>{{ t.select('select.categories', null) }}</p>
+
+
 <h2>Prefix example</h2>
 @let tPrefixed = t.prefix('homeNested.blocks');
 <p>{{ tPrefixed('something') }}</p>
