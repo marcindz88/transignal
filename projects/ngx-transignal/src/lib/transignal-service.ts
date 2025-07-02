@@ -40,7 +40,7 @@ export class TransignalService<
   /**
    * Use to set or get active language
    */
-  readonly activeLang = signal<Languages>(this.config.availableLangs[0]);
+  readonly activeLang = signal<Languages>(this.config.defaultLang);
   /**
    * Use to determine whether service is currently loading translation files
    */
