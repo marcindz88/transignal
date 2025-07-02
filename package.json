@@ -1,10 +1,10 @@
 {
   "name": "ngx-transignal-workspace",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build ngx-transignal",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ngx-transignal-demo": "node dist/ngx-transignal-demo/server/server.mjs",
