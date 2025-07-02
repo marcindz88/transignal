@@ -11,7 +11,13 @@ import {
 
 import { injectTransignalConfig } from './transignal-config';
 import { simpleParamsHandler } from './transignal-param-handlers';
-import { PluralTranslation, TranslateFn, TranslateObj, TranslateParams, TranslationFile } from './types';
+import {
+  PluralTranslation,
+  TranslateFn,
+  TranslateObj,
+  TranslateParams,
+  TranslationFile,
+} from './types';
 import { StringKeys } from './utility-types';
 
 @Injectable()

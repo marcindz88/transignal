@@ -13,13 +13,11 @@ export type TransignalError = 'missing_key' | 'missing_file' | 'missing_plural';
 
 export type TranslateParams = Record<string, unknown>;
 
-export type PluralTranslation = Partial<
-  Record<number | 'one' | 'few' | 'many' | 'other', string>
->;
+export type PluralTranslation = Partial<Record<number | 'one' | 'few' | 'many' | 'other', string>>;
 
 export type TranslateFn<Keys extends string, Result> = (
   key: Keys,
-  params?: TranslateParams,
+  params?: TranslateParams
 ) => Result;
 
 export type TranslateObj<Context extends Record<string, any>> = TranslateFn<
@@ -28,21 +26,20 @@ export type TranslateObj<Context extends Record<string, any>> = TranslateFn<
 > & {
   arr: <ArrKey extends ArrayPaths<Context>>(
     key: ArrKey,
-    params?: TranslateParams,
+    params?: TranslateParams
   ) => GetNestedType<Context, ArrKey>;
   obj: <ObjKey extends ObjectPaths<Context>>(
     key: ObjKey,
-    params?: TranslateParams,
+    params?: TranslateParams
   ) => GetNestedType<Context, ObjKey>;
   plural: <ObjKey extends PluralPaths<Context>>(
     key: ObjKey,
     value: number,
-    params?: TranslateParams,
+    params?: TranslateParams
   ) => string;
   prefix: <T extends ObjectPaths<Context>>(
-    prefix: T,
-  ) => TranslateObj<Context[T]> &
-    TranslateFn<FilterPathsByPrefix<StringPaths<Context>, T>, string>;
+    prefix: T
+  ) => TranslateObj<Context[T]> & TranslateFn<FilterPathsByPrefix<StringPaths<Context>, T>, string>;
 };
 
 export type TranslationFile = Record<string, unknown>;
@@ -81,10 +78,7 @@ export type TransignalConfig<
    * a record of string keys to unknown values representing the translations for
    * the given scope and language.
    */
-  loader: (
-    scope: StringKeys<Translations>,
-    lang: Languages,
-  ) => Promise<TranslationFile>;
+  loader: (scope: StringKeys<Translations>, lang: Languages) => Promise<TranslationFile>;
   /**
    * An optional function that defines how a loading message should be displayed
    * while translations are being loaded.

@@ -1,8 +1,4 @@
-import {
-  inject,
-  InjectionToken,
-  makeEnvironmentProviders,
-} from '@angular/core';
+import { inject, InjectionToken, makeEnvironmentProviders } from '@angular/core';
 import { TransignalConfig } from './types';
 import { TransignalService } from './transignal-service';
 import { StringKeys } from './utility-types';
@@ -24,12 +20,10 @@ export const prepareTransignal = <
   Languages extends string,
   Translations extends Record<string, Record<string, unknown>>,
 >(
-  config: TransignalConfig<Languages, Translations>,
+  config: TransignalConfig<Languages, Translations>
 ) => {
   const service = () =>
-    inject<
-      TransignalService<Languages, Translations, StringKeys<Translations>>
-    >(TransignalService);
+    inject<TransignalService<Languages, Translations, StringKeys<Translations>>>(TransignalService);
   return {
     provide: () =>
       makeEnvironmentProviders([
@@ -37,7 +31,6 @@ export const prepareTransignal = <
         TransignalService,
       ]),
     service,
-    t: <Scope extends StringKeys<Translations>>(scope: Scope) =>
-      service().t(scope),
+    t: <Scope extends StringKeys<Translations>>(scope: Scope) => service().t(scope),
   };
 };

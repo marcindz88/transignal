@@ -8,17 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:ngx-transignal-demo": "node dist/ngx-transignal-demo/server/server.mjs",
-    "lint": "ng lint"
-  },
-  "prettier": {
-    "overrides": [
-      {
-        "files": "*.html",
-        "options": {
-          "parser": "angular"
-        }
-      }
-    ]
+    "lint": "eslint --fix ./"
   },
   "private": true,
   "dependencies": {

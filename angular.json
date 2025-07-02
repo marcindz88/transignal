@@ -52,9 +52,7 @@
                 "input": "projects/ngx-transignal-demo/public"
               }
             ],
-            "styles": [
-              "projects/ngx-transignal-demo/src/styles.scss"
-            ],
+            "styles": ["projects/ngx-transignal-demo/src/styles.scss"],
             "server": "projects/ngx-transignal-demo/src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -111,9 +109,7 @@
                 "input": "projects/ngx-transignal-demo/public"
               }
             ],
-            "styles": [
-              "projects/ngx-transignal-demo/src/styles.scss"
-            ]
+            "styles": ["projects/ngx-transignal-demo/src/styles.scss"]
           }
         }
       }
