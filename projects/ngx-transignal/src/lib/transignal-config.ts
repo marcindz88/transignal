@@ -22,6 +22,9 @@ export const injectTransignalConfig = <
  * @param config Transignal configruation {@link TransignalConfig}
  * @param features Extra tree-shakeable features
  * - {@link withPreloadScopes} - preloads selected scopes
+ * - {@link withServerSideLanguage} - sets language based on `document.lang` in SSR environment
+ * - {@link withNavigatorLanguage} - sets language based on `navigator.language` in browser environment
+ * - {@link withLanguageLocalStorageSync} - syncs language with localStorage
  */
 export const prepareTransignal = <
   Languages extends string,

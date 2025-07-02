@@ -3,6 +3,9 @@ import {
   treeShakedTranslations,
   TranslationFile,
   withPreloadScopes,
+  withNavigatorLanguage,
+  withLanguageLocalStorageSync,
+  withServerSideLanguage,
 } from 'ngx-transignal';
 import type translations from './i18n/translations';
 
@@ -14,5 +17,8 @@ export const transignal = prepareTransignal(
     loader: (scope, lang): Promise<TranslationFile> =>
       import(`./i18n/${scope}/${lang}.ts`).then(res => res.default),
   },
+  withServerSideLanguage(),
+  withNavigatorLanguage(),
+  withLanguageLocalStorageSync(),
   withPreloadScopes(['global'])
 );
