@@ -7,6 +7,7 @@ import {
   withLanguageLocalStorageSync,
   withServerSideLanguage,
 } from 'ngx-transignal';
+
 import type translations from './i18n/translations';
 
 export const transignal = prepareTransignal(

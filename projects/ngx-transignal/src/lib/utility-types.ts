@@ -1,3 +1,5 @@
+import { Signal } from '@angular/core';
+
 import { PluralTranslation, SelectTranslation } from './types';
 
 export type GetNestedType<T, P extends string> = P extends `${infer Key}.${infer Rest}`
@@ -47,3 +49,9 @@ export type StringPaths<T> = {
 }[Paths<T>];
 
 export type StringKeys<T> = Extract<keyof T, string>;
+
+export type ResourceRefLike<T> = {
+  value: Signal<T | undefined>;
+  isLoading: Signal<boolean>;
+  error: Signal<Error | undefined>;
+};

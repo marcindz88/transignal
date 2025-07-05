@@ -4,13 +4,12 @@ import {
   inject,
   Injectable,
   resource,
-  ResourceRef,
   runInInjectionContext,
   signal,
   untracked,
 } from '@angular/core';
 
-import { injectTransignalConfig } from './transignal-config';
+import { injectTransignalConfig, TREE_SHAKED_TRANSLATIONS } from './transignal-config';
 import { simpleParamsHandler } from './transignal-param-handlers';
 import {
   PluralTranslation,
@@ -20,7 +19,7 @@ import {
   TranslateParams,
   TranslationFile,
 } from './types';
-import { StringKeys } from './utility-types';
+import { ResourceRefLike, StringKeys } from './utility-types';
 
 @Injectable()
 export class TransignalService<
@@ -32,10 +31,11 @@ export class TransignalService<
   private readonly config = injectTransignalConfig<Languages, Translations>();
   private readonly paramsHandler = this.config.paramHandler ?? simpleParamsHandler;
   private readonly loadingFn = this.config.loadingFn ?? (() => '...');
+  // eslint-disable-next-line no-console
   private readonly errorHandler = this.config.errorHandler ?? console.error; // TODO maybe add a link to error page in docs
   private readonly loadingCount = signal<number>(0);
   private readonly scopeMap = new Map<string, TranslateObj<Translations[Scopes]>>();
-  private readonly languageMap = new Map<string, ResourceRef<TranslationFile | undefined>>();
+  private readonly languageMap = new Map<string, ResourceRefLike<TranslationFile | undefined>>();
 
   /**
    * Use to set or get active language
@@ -184,24 +184,32 @@ export class TransignalService<
     return translation;
   }
 
-  private fetchLanguage(scope: Scopes, lang: Languages): ResourceRef<TranslationFile | undefined> {
+  private fetchLanguage(
+    scope: Scopes,
+    lang: Languages
+  ): ResourceRefLike<TranslationFile | undefined> {
     const cacheKey = `${scope}/${lang}`;
     const existing = this.languageMap.get(cacheKey);
     if (existing) return existing;
+    const { translations, loader } = this.config;
 
     const translation = runInInjectionContext(this.injector, () =>
-      untracked(() =>
-        resource({
-          loader: async () => {
-            this.loadingCount.update(count => ++count);
-            const file = await runInInjectionContext(this.injector, () =>
-              this.config.loader(scope, lang)
-            );
-            this.loadingCount.update(count => --count);
-            return file;
-          },
-        })
-      )
+      (translations as Translations | typeof TREE_SHAKED_TRANSLATIONS) === TREE_SHAKED_TRANSLATIONS
+        ? untracked(() =>
+            resource({
+              loader: async () => {
+                this.loadingCount.update(count => ++count);
+                const file = await runInInjectionContext(this.injector, () => loader(scope, lang));
+                this.loadingCount.update(count => --count);
+                return file;
+              },
+            })
+          )
+        : {
+            value: signal(translations[scope]),
+            isLoading: signal(false),
+            error: signal(undefined),
+          }
     );
     this.languageMap.set(cacheKey, translation);
     return translation;

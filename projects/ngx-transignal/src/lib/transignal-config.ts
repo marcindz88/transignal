@@ -1,8 +1,9 @@
 import { inject, InjectionToken, makeEnvironmentProviders } from '@angular/core';
-import { TransignalConfig } from './types';
-import { TransignalService } from './transignal-service';
-import { StringKeys } from './utility-types';
+
 import { TransignalFeature } from './features/types';
+import { TransignalService } from './transignal-service';
+import { TransignalConfig } from './types';
+import { StringKeys } from './utility-types';
 
 export const TREE_SHAKED_TRANSLATIONS = Symbol('TREE_SHAKED_TRANSLATIONS');
 
@@ -36,6 +37,8 @@ export const prepareTransignal = <
   const service = () =>
     inject<TransignalService<Languages, Translations, StringKeys<Translations>>>(TransignalService);
   return {
+    config,
+    features,
     provide: () =>
       makeEnvironmentProviders([
         { provide: TRANSIGNAL_CONFIG, useValue: config },
@@ -46,3 +49,17 @@ export const prepareTransignal = <
     t: <Scope extends StringKeys<Translations>>(scope: Scope) => service().t(scope),
   };
 };
+
+/**
+ * Provides unit-test version of transignal that loads translation instantly without loading
+ *
+ * @param transignal   existing transignal instance
+ * @param translations real translations in a selected language
+ */
+export const provideTestTransignal = <
+  Languages extends string,
+  Translations extends Record<string, Record<string, unknown>>,
+>(
+  transignal: ReturnType<typeof prepareTransignal<Languages, Translations>>,
+  translations: Translations
+) => prepareTransignal({ ...transignal.config, translations }, ...transignal.features).provide();
