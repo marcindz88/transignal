@@ -1,5 +1,6 @@
-import type en from './en';
 import { plural, select } from 'ngx-transignal';
+
+import type en from './en';
 
 export default {
   heading: 'FR Home heading',
