@@ -8,6 +8,7 @@ import { TransignalService } from '../transignal-service';
 /**
  * Saves user selected language in selected storage e.g. localStorage
  * Works only in browser environment
+ *
  * @param key Key under which it should save the language in storage
  * @param storage Storage to be used e.g. localStorage or sessionStorage
  */

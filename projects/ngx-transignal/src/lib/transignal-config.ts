@@ -1,13 +1,14 @@
 import { inject, InjectionToken, makeEnvironmentProviders } from '@angular/core';
 
 import { TransignalFeature } from './features/types';
-import { internalTransignal } from './internals';
+import { INTERNAL_TRANSIGNAL_CONFIG, TREE_SHAKED_TRANSLATIONS } from './internals';
 import { TransignalService } from './transignal-service';
 import { TransignalConfig } from './types';
 import { StringKeys } from './utility-types';
 
-export const TREE_SHAKED_TRANSLATIONS = Symbol('TREE_SHAKED_TRANSLATIONS');
-
+/**
+ * Utility function to define a type of translations for type inference
+ */
 export const treeShakedTranslations = <
   Translations extends Record<string, Record<string, unknown>>,
 >() => TREE_SHAKED_TRANSLATIONS as unknown as Translations;
@@ -23,7 +24,7 @@ export const injectTransignalConfig = <
 >() => inject<TransignalConfig<Languages, Translations>>(TRANSIGNAL_CONFIG);
 
 /**
- * Preparse type-safe transignal object
+ * Prepares type-safe transignal object
  * @param config Transignal configruation {@link TransignalConfig}
  * @param features Extra tree-shakeable features
  * - {@link withPreloadScopes} - preloads selected scopes
@@ -42,7 +43,7 @@ export const prepareTransignal = <
   const service = () =>
     inject<TransignalService<Languages, Translations, StringKeys<Translations>>>(TransignalService);
   return {
-    [internalTransignal]: { config, features },
+    [INTERNAL_TRANSIGNAL_CONFIG]: { config, features },
     provide: () =>
       makeEnvironmentProviders([
         { provide: TRANSIGNAL_CONFIG, useValue: config },

@@ -8,7 +8,7 @@ import { TransignalService } from '../transignal-service';
 import { TranslateObj } from '../types';
 import { StringKeys } from '../utility-types';
 
-export class TransignalTitleStrategy extends TitleStrategy {
+class TransignalTitleStrategy extends TitleStrategy {
   private readonly title = inject(Title);
   private readonly router = inject(Router);
   private effectRef: EffectRef | undefined;

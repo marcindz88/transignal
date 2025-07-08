@@ -1,4 +1,4 @@
-import { internalTransignal } from './internals';
+import { INTERNAL_TRANSIGNAL_CONFIG } from './internals';
 import { prepareTransignal } from './transignal-config';
 
 /**
@@ -15,6 +15,6 @@ export const provideTransignalTesting = <
   translations: Translations
 ) =>
   prepareTransignal(
-    { ...transignal[internalTransignal].config, translations },
-    ...transignal[internalTransignal].features
+    { ...transignal[INTERNAL_TRANSIGNAL_CONFIG].config, translations },
+    ...transignal[INTERNAL_TRANSIGNAL_CONFIG].features
   ).provide();

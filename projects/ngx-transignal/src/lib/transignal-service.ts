@@ -9,7 +9,8 @@ import {
   untracked,
 } from '@angular/core';
 
-import { injectTransignalConfig, TREE_SHAKED_TRANSLATIONS } from './transignal-config';
+import { TREE_SHAKED_TRANSLATIONS } from './internals';
+import { injectTransignalConfig } from './transignal-config';
 import { simpleParamsHandler } from './transignal-param-handlers';
 import {
   PluralTranslation,
@@ -21,6 +22,10 @@ import {
 } from './types';
 import { ResourceRefLike, StringKeys } from './utility-types';
 
+/**
+ * Main transignal service, used to process and cache translations
+ * Can be injected directly or with use of transignal object created with {@link prepareTransignal} function (recommended)
+ */
 @Injectable()
 export class TransignalService<
   Languages extends string,
