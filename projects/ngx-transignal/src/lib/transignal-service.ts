@@ -49,11 +49,11 @@ export class TransignalService<
   t<Scope extends Scopes>(scope: Scope): TranslateObj<Translations[Scope]> {
     const existing = this.scopeMap.get(scope);
     if (existing) {
-      return existing as TranslateObj<Translations[Scope]>;
+      return existing as unknown as TranslateObj<Translations[Scope]>;
     }
     const scopeObj = this.initT<Translations[Scope]>(scope);
 
-    this.scopeMap.set(scope, scopeObj);
+    this.scopeMap.set(scope, scopeObj as unknown as TranslateObj<Translations[Scopes]>);
     return scopeObj;
   }
 

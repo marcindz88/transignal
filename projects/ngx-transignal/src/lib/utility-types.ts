@@ -7,33 +7,25 @@ export type GetNestedType<T, P extends string> = P extends `${infer Key}.${infer
     ? GetNestedType<T[Key], Rest>
     : never
   : P extends keyof T
-    ? T[P]
+    ? NonNullable<T[P]>
     : never;
 
 type DotPrefix<T extends string> = T extends '' ? '' : `.${T}`;
 
-export type Paths<T> = (
-  T extends object
-    ? T extends Array<infer U>
-      ? number | `${number}${DotPrefix<Paths<U>>}`
-      : {
-          [K in keyof T]-?: K extends string | number
-            ? `${K}` | `${K}${DotPrefix<Paths<T[K]>>}`
-            : never;
-        }[keyof T]
-    : ''
-) extends infer P
-  ? P extends string
-    ? P
-    : never
-  : never;
+export type Paths<T> = T extends object
+  ? T extends Array<infer U>
+    ? `${number}${'' | DotPrefix<Paths<U>>}`
+    : {
+        [K in keyof T]-?: K extends string | number ? `${K}${'' | DotPrefix<Paths<T[K]>>}` : never;
+      }[keyof T]
+  : '';
 
 export type ArrayPaths<T> = {
   [P in Paths<T>]: GetNestedType<T, P> extends Array<unknown> ? P : never;
 }[Paths<T>];
 
 export type ObjectPaths<T> = {
-  [P in Paths<T>]: GetNestedType<T, P> extends Record<string, unknown> ? P : never;
+  [P in Paths<T>]: GetNestedType<T, P> extends Record<any, unknown> ? P : never;
 }[Paths<T>];
 
 export type PluralPaths<T> = {
