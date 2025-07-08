@@ -1,4 +1,7 @@
 export default {
+  title: {
+    default: 'Transignal demo',
+  },
   heading: 'Example heading',
   array: ['entry 1', 'entry 2', 'entry 3'],
   nested: {

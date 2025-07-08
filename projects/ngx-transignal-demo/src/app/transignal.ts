@@ -9,6 +9,7 @@ import {
 } from 'ngx-transignal';
 
 import type translations from './i18n/translations';
+import { withTranslatedTitle } from '../../../ngx-transignal/src/lib/features/withTranslatedTitle';
 
 export const transignal = prepareTransignal(
   {
@@ -21,5 +22,6 @@ export const transignal = prepareTransignal(
   withServerSideLanguage(),
   withNavigatorLanguage(),
   withLanguageLocalStorageSync(),
-  withPreloadScopes(['global'])
+  withPreloadScopes(['global']),
+  withTranslatedTitle('global')
 );

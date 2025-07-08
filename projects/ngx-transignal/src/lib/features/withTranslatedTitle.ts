@@ -1,7 +1,14 @@
-import { computed, effect, EffectRef, inject, makeEnvironmentProviders } from '@angular/core';
+import {
+  computed,
+  effect,
+  EffectRef,
+  EnvironmentInjector,
+  inject,
+  makeEnvironmentProviders,
+  runInInjectionContext,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
-import { Router } from 'express';
+import { Router, RouterStateSnapshot, TitleStrategy } from '@angular/router';
 
 import { TransignalFeature } from './types';
 import { TransignalService } from '../transignal-service';
@@ -10,7 +17,8 @@ import { StringKeys } from '../utility-types';
 
 class TransignalTitleStrategy extends TitleStrategy {
   private readonly title = inject(Title);
-  private readonly router = inject(Router);
+  private readonly injector = inject(EnvironmentInjector);
+
   private effectRef: EffectRef | undefined;
 
   constructor(private readonly t: TranslateObj<Record<string, string>>) {
@@ -19,11 +27,13 @@ class TransignalTitleStrategy extends TitleStrategy {
 
   updateTitle(routerState: RouterStateSnapshot): void {
     this.effectRef?.destroy();
-    const title = this.buildTitle(routerState);
-    const translation = computed(() =>
-      this.t(title || 'default', this.router.getCurrentNavigation()?.extras.state)
+    const router = this.injector.get(Router);
+    const title = this.buildTitle(routerState) || 'default';
+    const translation = computed(() => this.t(title, router.getCurrentNavigation()?.extras.state));
+
+    this.effectRef = runInInjectionContext(this.injector, () =>
+      effect(() => this.title.setTitle(translation()), { manualCleanup: true })
     );
-    this.effectRef = effect(() => this.title.setTitle(translation()));
   }
 }
 
