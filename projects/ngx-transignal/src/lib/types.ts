@@ -1,3 +1,7 @@
+// eslint-disable-next-line unused-imports/no-unused-imports
+import type { inject } from '@angular/core';
+
+import { ParamHandler } from './transignal-param-handlers';
 import {
   ArrayPaths,
   GetNestedType,
@@ -7,9 +11,6 @@ import {
   StringKeys,
   StringPaths,
 } from './utility-types';
-import { ParamHandler } from './transignal-param-handlers';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { inject } from '@angular/core';
 
 export type TransignalError =
   /** Error when key is not found in translations */
