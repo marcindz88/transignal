@@ -1,6 +1,7 @@
 import { inject, InjectionToken, makeEnvironmentProviders } from '@angular/core';
 
 import { TransignalFeature } from './features/types';
+import { internalTransignal } from './internals';
 import { TransignalService } from './transignal-service';
 import { TransignalConfig } from './types';
 import { StringKeys } from './utility-types';
@@ -13,6 +14,9 @@ export const treeShakedTranslations = <
 
 export const TRANSIGNAL_CONFIG = new InjectionToken('TRANSIGNAL_CONFIG');
 
+/**
+ * Use to inject transignal config
+ */
 export const injectTransignalConfig = <
   Languages extends string,
   Translations extends Record<string, Record<string, unknown>>,
@@ -38,8 +42,7 @@ export const prepareTransignal = <
   const service = () =>
     inject<TransignalService<Languages, Translations, StringKeys<Translations>>>(TransignalService);
   return {
-    config,
-    features,
+    [internalTransignal]: { config, features },
     provide: () =>
       makeEnvironmentProviders([
         { provide: TRANSIGNAL_CONFIG, useValue: config },
