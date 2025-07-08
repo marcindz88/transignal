@@ -1,24 +1,25 @@
-# @ngbros/transignal 🚀
+# Transignal 🚀
 
-[](https://github.com/your-repo)
+[](https://github.com/marcindz88/transignal)
 [](https://www.google.com/search?q=https://www.npmjs.com/package/%40ngbros/transignal)
 [](https://www.google.com/search?q=https://bundlephobia.com/result%3Fp%3D%40ngbros/transignal)
 [](https://opensource.org/licenses/MIT)
 
 A modern, type-safe, and lightweight internationalization (i18n) library for Angular, built using just Angular Signals. Say goodbye to boilerplate and hello to intuitive, performant, and scalable translations.
+
 No more useless `<ng-container>` or structural directives affecting static DOM creation. Tired of runtime production errors, missing keys, differences between translation files? We are too.
 
-`@ngbros/transignal` is designed to provide a seamless developer experience with powerful features out of the box, making your translation workflow easier and more robust than ever.
+`Transignal` is designed to provide a seamless developer experience with powerful features out of the box, making your translation workflow easier and more robust than ever.
 
 -----
 
-## ✨ Why Choose @ngbros/transignal?
+## ✨ Why Choose Transignal?
 
-`@ngbros/transignal` isn't just another i18n library. It's a next-generation solution that leverages the full power of modern Angular. Here’s why it stands out, especially when compared to libraries like Transloco or ngx-translate:
+`Transignal` isn't just another i18n library. It's a next-generation solution that leverages the full power of modern Angular. Here’s why it stands out, especially when compared to libraries like Transloco or ngx-translate:
 
-* **🤖 Superior Type/Key Safety & Inference:** Forget manual type definitions for your translation keys. `@ngbros/transignal` offers automatic and powerful type inference for all your translation keys and structures. This means fewer runtime errors and a more confident coding experience.
+* **🤖 Superior Type/Key Safety & Inference:** Forget manual type definitions for your translation keys. `Transignal` offers automatic and powerful type inference for all your translation keys and structures. This means fewer runtime errors and a more confident coding experience.
 
-* **💡 Intelligent Autocompletion:** Enjoy flawless key autocompletion directly in your IDE. `@ngbros/transignal` understands your translation schema, providing suggestions as you type and catching errors before they happen.
+* **💡 Intelligent Autocompletion:** Enjoy flawless key autocompletion directly in your IDE. `Transignal` understands your translation schema, providing suggestions as you type and catching errors before they happen.
 
 * **🧩 Simple & Centralized Configuration:** A single, straightforward configuration file is all you need to get started. No complex setup or multiple provider definitions required.
 
@@ -28,11 +29,11 @@ No more useless `<ng-container>` or structural directives affecting static DOM c
 
 * **🌳 Tree-Shakeable Features:** Keep your application lean. Optional features like `withPreloadScopes`, `withLanguageLocalStorageSync`, and `withNavigatorLanguage` are tree-shakeable, ensuring they don't add to your bundle size if you don't use them.
 
-* **📦 No Peer Dependencies (Except Angular):** `@ngbros/transignal` has no external dependencies other than Angular itself. This means fewer `node_modules` conflicts and a lighter footprint.
+* **📦 No Peer Dependencies (Except Angular):** `Transignal` has no external dependencies other than Angular itself. This means fewer `node_modules` conflicts and a lighter footprint.
 
 * **🪶 Smaller Bundle Size:** Our library is designed to be incredibly lightweight, resulting in a smaller impact on your application's final bundle size compared to other solutions.
 
-* **🚀 100% Signal-Based & RxJS-Free:** Built from the ground up with Angular Signals and the new `resource` utility, `@ngbros/transignal` is reactive, performant, and aligned with the future of Angular.
+* **🚀 100% Signal-Based & RxJS-Free:** Built from the ground up with Angular Signals and the new `resource` utility, `Transignal` is reactive, performant, and aligned with the future of Angular.
 
 * **⚡ Vite-Powered Caching:** By using TypeScript files (`.ts`) instead of JSON for translations, your files are processed by Vite (or the Angular CLI), which automatically adds a unique hash to the filename. This ensures perfect cache-busting and efficient loading.
 
@@ -40,7 +41,7 @@ No more useless `<ng-container>` or structural directives affecting static DOM c
 
 ## 📊 Comparison with Other i18n Libraries
 
-| Feature                    | @ngbros/transignal                 | Transloco                                | ngx-translate                      | Angular i18n                        |
+| Feature                    | Transignal                         | Transloco                                | ngx-translate                      | Angular i18n                        |
 |----------------------------|------------------------------------|------------------------------------------|------------------------------------|-------------------------------------|
 | **Type and key Inference** | ✅ **Excellent & Automatic**        | ⚠️ Partial (requires plugins/generation) | ❌ Manual                           | Not needed                          |
 | **Bundle Size**            | 🥇 **Very Small**                  | 🥈 Small                                 | 🥉 Medium                          | 🏅 Large (copies app for each lang) |
@@ -54,7 +55,7 @@ No more useless `<ng-container>` or structural directives affecting static DOM c
 
 ## 🛠️ Installation and Setup
 
-Getting started with `@ngbros/transignal` is simple.
+Getting started with `Transignal` is simple.
 
 1.  **Install the package:**
 
