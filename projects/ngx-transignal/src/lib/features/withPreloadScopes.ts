@@ -1,7 +1,7 @@
 import { effect, inject, provideAppInitializer } from '@angular/core';
-import { TransignalService } from 'ngx-transignal';
 
 import { TransignalFeature } from './types';
+import { TransignalService } from '../transignal-service';
 import { StringKeys } from '../utility-types';
 
 /**

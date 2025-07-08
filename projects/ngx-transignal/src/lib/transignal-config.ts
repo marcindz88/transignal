@@ -26,6 +26,7 @@ export const injectTransignalConfig = <
  * - {@link withServerSideLanguage} - sets language based on `document.lang` in SSR environment
  * - {@link withNavigatorLanguage} - sets language based on `navigator.language` in browser environment
  * - {@link withLanguageLocalStorageSync} - syncs language with localStorage
+ * - {@link withTranslatedTitle} - enables translation of page title
  */
 export const prepareTransignal = <
   Languages extends string,

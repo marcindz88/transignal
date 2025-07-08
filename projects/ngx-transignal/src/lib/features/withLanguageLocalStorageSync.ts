@@ -1,8 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { effect, inject, PLATFORM_ID, provideAppInitializer } from '@angular/core';
-import { injectTransignalConfig, TransignalService } from 'ngx-transignal';
 
 import { TransignalFeature } from './types';
+import { injectTransignalConfig } from '../transignal-config';
+import { TransignalService } from '../transignal-service';
 
 /**
  * Saves user selected language in selected storage e.g. localStorage

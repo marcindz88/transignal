@@ -1,8 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, provideAppInitializer } from '@angular/core';
-import { injectTransignalConfig, TransignalService } from 'ngx-transignal';
 
 import { TransignalFeature } from './types';
+import { injectTransignalConfig } from '../transignal-config';
+import { TransignalService } from '../transignal-service';
 
 /**
  * Sets active language depending on `navigator.language`, which represents user defined browser settings

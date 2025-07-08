@@ -1,7 +1,9 @@
-import { TransignalFeature } from './types';
-import { DOCUMENT, inject, PLATFORM_ID, provideAppInitializer } from '@angular/core';
-import { injectTransignalConfig, TransignalService } from 'ngx-transignal';
 import { isPlatformServer } from '@angular/common';
+import { DOCUMENT, inject, PLATFORM_ID, provideAppInitializer } from '@angular/core';
+
+import { TransignalFeature } from './types';
+import { injectTransignalConfig } from '../transignal-config';
+import { TransignalService } from '../transignal-service';
 
 /**
  * Sets active language depending on `document.lang` attribute which should be set by the server.ts depending on `Accept-language` header
