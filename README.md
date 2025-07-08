@@ -247,18 +247,14 @@ import { transignal } from './transignal';
 import { YourComponent } from './your.component';
 
 // Import your raw translation files
-import global from './i18n/global/en';
-import home from './i18n/home/en';
+import translations from './i18n/translations';
 
 describe('YourComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [YourComponent],
       providers: [
-        provideTransignalTesting(transignal, {
-          global,
-          home,
-        }),
+        provideTransignalTesting(transignal, translations),
       ],
     }).compileComponents();
   });
@@ -267,7 +263,7 @@ describe('YourComponent', () => {
     const fixture = TestBed.createComponent(YourComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Home heading');
+    expect(compiled.querySelector('h1')?.textContent).toContain(translations.home.heading); // use translations here - no more updating tests after translation changes !
   });
 });
 ```
